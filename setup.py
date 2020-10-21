@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="twinkly-client-dr1rrb", # Replace with your own username
+    name="twinkly-client",
     version="0.0.1",
     author="dr1rrb",
     author_email="py-twinkly-client@torick.net",
