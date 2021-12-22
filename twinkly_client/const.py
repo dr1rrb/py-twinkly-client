@@ -6,6 +6,7 @@ from aiohttp import ClientTimeout
 EP_DEVICE_INFO = "gestalt"
 EP_MODE = "led/mode"
 EP_BRIGHTNESS = "led/out/brightness"
+EP_COLOR = "led/color"
 EP_LOGIN = "login"
 EP_VERIFY = "verify"
 

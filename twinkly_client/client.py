@@ -7,6 +7,7 @@ from aiohttp import ClientResponseError, ClientSession
 
 from .const import (
     EP_BRIGHTNESS,
+    EP_COLOR,
     EP_DEVICE_INFO,
     EP_LOGIN,
     EP_MODE,
@@ -45,11 +46,19 @@ class TwinklyClient:
 
     async def get_is_on(self) -> bool:
         """Get a boolean which indicates the current state of the device."""
-        return (await self.__send_request(EP_MODE))["mode"] != "off"
+        return await self.get_mode() != "off"
 
     async def set_is_on(self, is_on: bool) -> None:
         """Turn the device on / off."""
         await self.__send_request(EP_MODE, {"mode": "movie" if is_on else "off"})
+
+    async def get_mode(self) -> str:
+        """Get the current mode of the device (off,color,demo,effect,movie,playlist,rt)."""
+        return (await self.__send_request(EP_MODE))["mode"]
+
+    async def set_mode(self, mode: str) -> None:
+        """Set the device mode (off,color,demo,effect,movie,playlist,rt)"""
+        await self.__send_request(EP_MODE, {"mode": mode})
 
     async def get_brightness(self) -> int:
         """Get the current brightness of the device, between 0 and 100."""
@@ -59,6 +68,36 @@ class TwinklyClient:
     async def set_brightness(self, brightness: int) -> None:
         """Set the brightness of the device."""
         await self.__send_request(EP_BRIGHTNESS, {"value": brightness, "type": "A"})
+
+    async def get_color(self) -> dict:
+        """Get the current color, dict of h,s,v,r,g,b,w ints"""
+        response_data = await self.__send_request(EP_COLOR)
+        return response_data
+
+    async def set_color(
+            self,
+            hue: int = None,
+            saturation: int = None,
+            value: int = None,
+            red: int = None,
+            green: int = None,
+            blue: int = None,
+            white: int = None
+    ) -> None:
+        """Set the color of the device."""
+        # Only include set keys
+        payload = {
+            k: v for k, v in {
+                "hue": hue,
+                "saturation": saturation,
+                "value": value,
+                "red": red,
+                "green": green,
+                "blue": blue,
+                "white": white
+            }.items() if v is not None
+        }
+        await self.__send_request(EP_COLOR, payload)
 
     async def __send_request(
         self, endpoint: str, data: Any = None, retry: int = 1
