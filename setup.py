@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="twinkly-client",
-    version="0.0.1",
+    version="0.0.3",
     author="dr1rrb",
     author_email="py-twinkly-client@torick.net",
     description="A package to communicate with Twinkly LED strings",
